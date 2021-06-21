@@ -19,7 +19,7 @@ class BranchSerializer(serializers.Serializer):
     latitude = serializers.CharField(max_length=60)
     longtitude = serializers.CharField(max_length=60)
     address = serializers.CharField(max_length=60)
-    branch_course = serializers.CharField(max_length=60)
+    branch_course = serializers.CharField(required=False, max_length=60)
 
     class Meta:
         model = Branch
@@ -30,7 +30,7 @@ class ContactSerializer(serializers.Serializer):
 
     type = serializers.CharField(max_length = 20)
     value = serializers.CharField(max_length = 60)
-    contact_course = serializers.CharField(max_length = 60)
+    contact_course = serializers.CharField(required=False, max_length = 60)
 
     class Meta:
         model = Contact
@@ -44,10 +44,10 @@ class CourseSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=60)
     category = serializers.CharField(max_length=60)
     logo = serializers.CharField(max_length=60)
-    contacts = serializers.CharField(max_length=60)
-    branches = serializers.CharField(max_length=60)
-    contacts = ContactSerializer(many = True)
-    branches = BranchSerializer(many = True)
+    contacts = serializers.CharField(required=False, max_length=60)
+    branches = serializers.CharField(required=False, max_length=60)
+    contacts = ContactSerializer(required=False, many = True)
+    branches = BranchSerializer(required=False, many = True)
 
     class Meta:
         model = Course
