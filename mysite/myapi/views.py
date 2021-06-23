@@ -17,8 +17,9 @@ class CategoryAPIViews(APIView):
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
+            serializer.save()
             name = serializer.data.get('name')
-            success = "Category '{0}' posted successfully".format(name)
+            success = "Category '{0}' has been added successfully".format(name)
             return Response({'success': success})
         else:
             return  Response(
@@ -37,8 +38,8 @@ class BranchAPIViews(APIView):
     def post(self, request):
         serializer = BranchSerializer(data=request.data)
         if serializer.is_valid():
-            name = serializer.data.get('name')
-            success = "Branch '{0}' posted successfully".format(name)
+            address = serializer.data.get('address')
+            success = "Branch '{0}' has been added successfully".format(address)
             return Response({'success': success})
         else:
             return  Response(
@@ -56,7 +57,7 @@ class ContactAPIViews(APIView):
         serializer = ContactSerializer(data=request.data)
         if serializer.is_valid():
             type = serializer.data.get('type')
-            success = "Contact '{0}' posted successfully".format(type)
+            success = "Contact '{0}' has been added successfully".format(type)
             return Response({'success': success})
 
         else:
@@ -92,18 +93,15 @@ class CourseAPIViews(APIView):
         except Course.DoesNotExist:
             return Response({'message': 'The course does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({'message': 'Course was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Course has been deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
         
-                   
-
 
     def post(self, request):
-        serializer = CourseSerializer(data=request.data)
+        serializer = CourseSerializer(data= self.request.data)
         if serializer.is_valid():
-            name = serializer.data.get('name')
-            success = "Course '{0}' posted successfully".format(name)
+            serializer.save()
+            success = "Course has been added successfully!"
             return Response({'success': success})
-
         else:
             return  Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST)
