@@ -34,7 +34,7 @@ class BranchSerializer(serializers.Serializer):
         fields = ['latitude', 'longtitude', 'address']
 
     def create(self, validated_data, *args, **kwargs):
-        branch = Category.objects.create(**validated_data)
+        branch = Branch.objects.create(**validated_data)
         branch.save()
         return branch
 
@@ -48,6 +48,11 @@ class ContactSerializer(serializers.Serializer):
         model = Contact
         fields = ['value', 'type']
 
+    def create(self, validated_data, *args, **kwargs):
+        contact = Contact.objects.create(**validated_data)
+        contact.save()
+        return contact
+
     
 class CourseSerializer(serializers.Serializer):
 
@@ -59,14 +64,8 @@ class CourseSerializer(serializers.Serializer):
         required = False
     )
     logo = serializers.CharField(max_length=60)
-    contacts = serializers.PrimaryKeyRelatedField(
-        queryset= Contact.objects.all(),
-        required=False)
-    branches = serializers.PrimaryKeyRelatedField(
-        queryset= Branch.objects.all(),
-        required=False)
-    contacts = ContactSerializer(required=False, many = True)
-    branches = BranchSerializer(required=False, many = True)
+    contacts = ContactSerializer(required=False, many = True, allow_null=True)
+    branches = BranchSerializer(required=False, many = True, allow_null=True)
 
     class Meta:
         model = Course
@@ -75,23 +74,19 @@ class CourseSerializer(serializers.Serializer):
     def __str__(self):
         return self.name
 
-    def create(self, validated_data, contacts=None, branches = None, category=None):
-        if contacts != None and branches != None:
-            contacts_data = validated_data.pop('contacts')
-            branches_data = validated_data.pop('branches')
-            course = Course.objects.create(**validated_data)
+    def create(self, validated_data, *args, **kwargs):        
+
+        contacts_data = validated_data.pop('contacts')
+        branches_data = validated_data.pop('branches')
+        course = Course.objects.create(**validated_data)
+        course.save()
+
+        for contact_data in contacts_data:
+            Contact.objects.create(course=course, **contact_data)
             course.save()
 
-            for contact_data in contacts_data:
-                Contact.objects.create(course=course, **contact_data)
-                course.save()
-
-            for branch_data in branches_data:
-                Branch.objects.create(course=course, **branch_data)
-                course.save() 
+        for branch_data in branches_data:
+            Branch.objects.create(course=course, **branch_data)
+            course.save() 
         
-            return course
-        else:
-            course = Course.objects.create(**validated_data)
-            course.save()
-            return course
+        return course

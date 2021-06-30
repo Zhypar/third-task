@@ -17,7 +17,7 @@ class Branch(models.Model):
     latitude = models.CharField(null=True, max_length=60)
     longtitude = models.CharField(null=True, max_length=60)
     address = models.CharField(null=True, max_length=60)
-    branch_course = models.ForeignKey('Course', related_name='branch_course', null=True, on_delete=models.CASCADE)
+    branch_course = models.ForeignKey('Course', related_name='branch_course', null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = 'Branches'
@@ -27,6 +27,7 @@ class Branch(models.Model):
 
 
 class Contact(models.Model):
+
     CONTACT_CHOICES = (
         ("1", "PHONE"),
         ("2", "FACEBOOK"), 
@@ -39,7 +40,7 @@ class Contact(models.Model):
         default = '1'
         )
     value = models.CharField(null=True, max_length = 60)
-    contact_course = models.ForeignKey('Course', related_name='contact_course', null=True, blank = True, on_delete=models.CASCADE)
+    contact_course = models.ForeignKey('Course', related_name='contact_course', null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = 'Contacts'
@@ -51,10 +52,11 @@ class Contact(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=60)
     description = models.CharField(max_length=60)
-    category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True,  blank=True, on_delete=models.CASCADE)
     logo = models.CharField(max_length=60)
-    contacts = models.ForeignKey(Contact, null=True, on_delete=models.CASCADE)
-    branches = models.ForeignKey(Branch, null=True, on_delete=models.CASCADE)
+    contacts = models.ForeignKey(Contact, null=True,  blank=True, on_delete=models.CASCADE)
+    branches = models.ForeignKey(Branch, null=True,  blank=True, on_delete=models.CASCADE)
+
 
 
     class Meta:
