@@ -9,7 +9,13 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 
 import os
 
+import sys
+
 from django.core.wsgi import get_wsgi_application
+
+path = 'C:\Users\QW\third_task'
+if path not in sys.path:
+    sys.path.append(path)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
