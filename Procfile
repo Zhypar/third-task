@@ -1,1 +1,1 @@
-web: gunicorn third_task.wsgi --log-file -
+web: gunicorn myapi.wsgi --log-file -
